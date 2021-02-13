@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  - push
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - uses: mingjun97/regex-property-action@test
+        with:
+          regex: '"name": "file-regex-replace",\n\s"version": "([0-9\.]*)",'
+          replacement: '"name": "file-regex-replace","version": "${1}-test",'
+          include: 'package.json'
+          exclude: ''
+      - uses: actions/upload-artifact@v2
+        with:
+          name: test-${{ matrix.os }}.json
+          path: |
+            *.json

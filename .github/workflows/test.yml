@@ -19,7 +19,7 @@ jobs:
       - uses: mingjun97/regex-property-action@test
         with:
           regex: '"version": "([0-9\.]*)",'
-          replacement: '"version": "${1}-test",'
+          replacement: '"version": "$1-test",'
           include: 'package.json'
       - uses: actions/upload-artifact@v2
         with:

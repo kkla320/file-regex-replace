@@ -12,14 +12,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: mingjun97/regex-property-action@test
+      - uses: kkla320/regex-property-action@test
         with:
-          regex: '"version": "([0-9\.]*)",'
-          replacement: '"version": "$1-test",'
+          regex: '(?<file>.*?).json'
+          replacement: '$<file>.xml'
           include: 'package.json'
       - uses: actions/upload-artifact@v2  # upload to artifact to see the changes
         with:
           name: test
           path: |
-            *.json
+            *.xml
 

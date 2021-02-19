@@ -1,50 +1,25 @@
 const core = require('@actions/core');
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require("path");
-
-
-function walk_recursive(dir, exclude, callback) {
-	fs.readdir(dir, function(err, files) {
-		if (err) throw err;
-		files.forEach(function(file) {
-			var filepath = path.join(dir, file);
-    if (!exclude.test(filepath)) {
-        fs.stat(filepath, function(err,stats) {
-          if (stats.isDirectory()) {
-            walk_recursive(filepath, exclude, callback);
-          } else if (stats.isFile()) {
-            callback(filepath, stats);
-          }
-        });
-      }
-		});
-	});
-}
 
 try {
     const regex = new RegExp(core.getInput('regex'), core.getInput('flags'));
     const replacement = core.getInput('replacement');
-    const include = new RegExp(core.getInput('include'));
-    const exclude = new RegExp(core.getInput('exclude'));
-    const encoding = core.getInput('encoding');
-    const start_path = core.getInput('path');
+    const dir = core.getInput('dir');
 
-    walk_recursive(start_path, exclude, (file) => {
-      if (include.test(file)){
-        fs.readFile(file, encoding, function (err,data) {
-          if (err) {
-            return console.log(err);
-          }
-          var result = data.replace(regex, replacement);
-          if (data != result) {
-            console.log('Modifying ', file);
-            fs.writeFile(file, result, encoding, function (err) {
-            if (err) return core.setFailed(err);
-           });
-          }
-        });
+    let contents = await fs.readdir(dir);
+    for (const content of contents) {
+      const oldPath = path.join(dir, content);
+      const isDirectory = await fs.stat(oldPath).isDirectory;
+      if (isDirectory) {
+        continue;
       }
-    })
+
+      const newFileName = content.replace(regex, replacement);
+      console.log(`Attempting to rename ${oldPath} to ${newPath}`);
+      const newPath = path.join(dir, newFileName);
+      await fs.rename(oldPath, newPath)
+    }
   } catch (error) {
     core.setFailed(error.message);
   }

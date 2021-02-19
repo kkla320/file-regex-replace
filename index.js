@@ -16,8 +16,8 @@ const main = async () => {
     }
 
     const newFileName = content.replace(regex, replacement);
-    console.log(`Attempting to rename ${oldPath} to ${newPath}`);
     const newPath = path.join(dir, newFileName);
+    console.log(`Attempting to rename ${oldPath} to ${newPath}`);
     await fs.rename(oldPath, newPath)
   }
 }

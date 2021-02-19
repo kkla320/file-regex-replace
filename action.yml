@@ -15,20 +15,8 @@ inputs:
     description: 'replacement string'
     default: "$1"
     required: true
-  include:
-    description: 'Files to be replaced(regex)'
-    default: '.*'
-    required: false
-  exclude:
-    description: 'Files not to be replaced(regex)'
-    default: '.^'
-    required: false
-  encoding:
-    description: 'String file encoding'
-    default: 'utf8'
-    required: false
-  path:
-    description: 'Path to the folder to be replaced'
+  dir:
+    description: 'Directory to search for for files'
     default: '.'
     required: false
 outputs:

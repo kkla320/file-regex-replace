@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: kkla320/regex-property-action@develop
+      - uses: kkla320/file-regex-replace@develop
         with:
           regex: '(?<file>.*?).json'
           replacement: '$<file>.txt'

@@ -10,13 +10,16 @@ const main = async () => {
   let contents = await fs.readdir(dir);
   for (const content of contents) {
     const oldPath = path.join(dir, content);
-    const isDirectory = await fs.stat(oldPath).isDirectory;
+    const isDirectory = (await fs.stat(oldPath)).isDirectory();
     if (isDirectory) {
       continue;
     }
 
     const newFileName = content.replace(regex, replacement);
     const newPath = path.join(dir, newFileName);
+    if (oldPath == newPath) {
+      continue
+    }
     console.log(`Attempting to rename ${oldPath} to ${newPath}`);
     await fs.rename(oldPath, newPath)
   }
